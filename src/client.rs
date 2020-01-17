@@ -1,69 +1,77 @@
 
 extern crate reqwest;
-
-use std::error::Error;
-use reqwest::Client;
+extern crate serde_json;
 
 const BASE_URL: &'static str = "https://profiles.segment.com";
 
 pub struct Client {
-    pub secret: String,
-    pub space_id: String,
-    client: Client,
+    pub client: reqwest::Client,
+    secret: String,
+    space_id: String,
 }
 
 impl Client {
     pub fn new(secret: &str, space_id: &str) -> Self {
         Client {
+            client: reqwest::Client::new(),
             secret: secret.to_owned(),
             space_id: space_id.to_owned(),
-            client: Client::new(),
         }
     }
 
-    pub fn get_traits(&self, id_type: &str, id_value: &str) -> Result<String, Error> {
-        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/traits", BASE_URL, self.space_id, id_type, id_value);
+    pub async fn get_traits(&self, key: &str, val: &str) -> reqwest::Result<serde_json::Value> {
+        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/traits", BASE_URL, self.space_id, key, val);
 
         self.client.get(url)
             .basic_auth(self.secret, None)
-            .send()?
-            .json()?
+            .send()
+            .await?
+            .json::<serde_json::Value>()
+            .await?
     }
 
-    pub fn get_events(&self, id_type: &str, id_value: &str) -> Result<String, Error> {
-        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/events", BASE_URL, self.space_id, id_type, id_value);
+    pub async fn get_events(&self, key: &str, val: &str) -> reqwest::Result<serde_json::Value> {
+        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/events", BASE_URL, self.space_id, key, val);
 
         self.client.get(url)
             .basic_auth(self.secret, None)
-            .send()?
-            .json()?
+            .send()
+            .await?
+            .json::<serde_json::Value>()
+            .await?
     }
 
-    pub fn get_metadata(&self, id_type: &str, id_value: &str) -> Result<String, Error> {
-        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/metadata", BASE_URL, self.space_id, id_type, id_value);
+    pub async fn get_metadata(&self, key: &str, val: &str) -> reqwest::Result<serde_json::Value> {
+        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/metadata", BASE_URL, self.space_id, key, val);
 
         self.client.get(url)
             .basic_auth(self.secret, None)
-            .send()?
-            .json()?
+            .send()
+            .await?
+            .json::<serde_json::Value>()
+            .await?
     }
 
-    pub fn get_external_ids(&self, id_type: &str, id_value: &str) -> Result<String, Error> {
-        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/external_ids", BASE_URL, self.space_id, id_type, id_value);
+    pub async fn get_external_ids(&self, key: &str, val: &str) -> reqwest::Result<serde_json::Value> {
+        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/external_ids", BASE_URL, self.space_id, key, val);
 
         self.client.get(url)
             .basic_auth(self.secret, None)
-            .send()?
-            .json()?
+            .send()
+            .await?
+            .json::<serde_json::Value>()
+            .await?
     }
 
-    pub fn get_links(&self, id_type: &str, id_value: &str) -> Result<String, Error> {
-        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/links", BASE_URL, self.space_id, id_type, id_value);
+    pub async fn get_links(&self, key: &str, val: &str) -> reqwest::Result<serde_json::Value> {
+        let url = format!("{}/v1/spaces/{}/collections/users/profiles/{}:{}/links", BASE_URL, self.space_id, key, val);
 
         self.client.get(url)
             .basic_auth(self.secret, None)
-            .send()?
-            .json()?
+            .send()
+            .await?
+            .json::<serde_json::Value>()
+            .await?
     }
 }
 
